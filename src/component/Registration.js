@@ -348,7 +348,7 @@ const Registration = () => {
 
     console.log(mainuser_id , "this is user_id")
           stakeMjcTokens();
-          postingData(mainuser_id)
+          // postingData(mainuser_id)
     
     toast.success(
       "Tokens Bought Successfully",
