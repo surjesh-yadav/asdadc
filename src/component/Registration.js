@@ -260,7 +260,7 @@ const Registration = () => {
     useContractWrite(contract, "DirectStakeJoining");
 
   const { mutateAsync: stakeTokens, isLoading: isStakeLoading } =
-    useContractWrite(contract, "stakeTokens");
+    useContractWrite(contract, "stakeTokens", {gas: 400000 } );
 
 
 
@@ -374,7 +374,7 @@ const Registration = () => {
     try {
      
        
-      const data = await stakeTokens({
+      const data = await stakeTokens({ 
         args: [newValue.toString(), 365, 0],
       });
       setStakeLoading(false);
