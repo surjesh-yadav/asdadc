@@ -264,60 +264,6 @@ const Registration = () => {
 
 
 
-  const buyToken = async () => {
-    setBuyTokenLoading(true);
-    try {
-      let ref;
-      if (parent === "0x0000000000000000000000000000000000000000") {
-        ref = referralCode;
-      } else {
-        ref = referralCode;
-      }
-      //console.log(referralCode,"this is parentsss")
-
-      let usdtAmt = result2;
-      //   let usdtAmt = ethers.utils.parseEther(result2);
-
-      const data = await buyTokens({
-        args: [ref, usdtAmt.toString(), selectedValue],
-      });
-      console.info("contract call successs", data);
-      await fetch("https://nodes.mjccoin.io/v1/plan-buy", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_wallet: address,
-          buyed_plan: [{ amount: selectedValue }],
-          parent_wallet_id: ref,
-          user_id: mainuser_id,
-        }),
-      });
-      setBuyTokenLoading(false);
-      console.log(mainuser_id , "this is user_id")
-      await stakeMjcTokens();
-      await postingData(mainuser_id)
-      
-      toast.success(
-        "Tokens Bought Successfully",
-        {
-          position: toast.POSITION.TOP_CENTER,
-        }
-      );
-      
-    } catch (err) {
-      toast.error("You can not buy more than $1000 in one transaction", {
-        position: toast.POSITION.TOP_CENTER,
-      });
-      console.error("contract call failure", err);
-    } finally {
-      setUSDTAmt("");
-      setBuyTokenLoading(false);
-     
-    }
-  };
-
   const DirectStakeJoinings = async () => {
     setDirectStakeJoiningLoading(true);
     try {
@@ -368,6 +314,61 @@ const Registration = () => {
  }
 
 
+ const buyToken = async () => {
+  setBuyTokenLoading(true);
+  try {
+    let ref;
+    if (parent === "0x0000000000000000000000000000000000000000") {
+      ref = referralCode;
+    } else {
+      ref = referralCode;
+    }
+    //console.log(referralCode,"this is parentsss")
+
+    let usdtAmt = result2;
+    //   let usdtAmt = ethers.utils.parseEther(result2);
+
+    const data = await buyTokens({
+      args: [ref, usdtAmt.toString(), selectedValue],
+    });
+    console.info("contract call successs", data);
+    await fetch("https://nodes.mjccoin.io/v1/plan-buy", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_wallet: address,
+        buyed_plan: [{ amount: selectedValue }],
+        parent_wallet_id: ref,
+        user_id: mainuser_id,
+      }),
+    });
+    setBuyTokenLoading(false);
+
+    console.log(mainuser_id , "this is user_id")
+          stakeMjcTokens();
+          postingData(mainuser_id)
+    
+    toast.success(
+      "Tokens Bought Successfully",
+      {
+        position: toast.POSITION.TOP_CENTER,
+      }
+    );
+    
+  } catch (err) {
+    toast.error("You can not buy more than $1000 in one transaction", {
+      position: toast.POSITION.TOP_CENTER,
+    });
+    console.error("contract call failure", err);
+  } finally {
+    setUSDTAmt("");
+    setBuyTokenLoading(false);
+   
+  }
+};
+
 
   const stakeMjcTokens = async () => {
     setStakeLoading(true);
@@ -395,6 +396,7 @@ const Registration = () => {
       setUSDTAmt("");
     }
   };
+
 
   const handleUserWallet = async () => {
     try {
