@@ -376,7 +376,7 @@ const Registration = () => {
      
        
       const data = await stakeTokens({ 
-        args: [newValue.toString(), 365, 0],
+        args: [100, 365, 0],
       });
       setStakeLoading(false);
       // await postingSteckTokens(mainuser_id , newValue)
