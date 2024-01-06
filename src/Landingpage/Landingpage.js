@@ -23,7 +23,7 @@ import poket_img from "../image/kisspng.svg";
 import bluesedo from "../image/gold-blur.png";
 import plashtfiny from "../image/tiffany-blur.png";
 import { Link } from "react-router-dom";
-import {useLogin } from "@thirdweb-dev/react";
+import { useLogin } from "@thirdweb-dev/react";
 import {
   ConnectWallet,
   useSDK,
@@ -49,7 +49,7 @@ const Landingpage = () => {
   const [previewID, setPreviewID] = useState("");
   const [userData, setUserData] = useState(null);
   const [userstakeData, setStakeData] = useState(null);
-  let  [ stakwallet , setStakeWallet ] = useState()
+  let [stakwallet, setStakeWallet] = useState();
 
   const handleChange = (event) => {
     setPreviewID(event.target.value);
@@ -58,13 +58,6 @@ const Landingpage = () => {
   const { contract } = useContract(
     "0x03D95fb8da5e9A147D3bC6dC03C3D75F12Cb11a9"
   );
-  
-
- 
-
-
-
-
 
   const fetchData = async (UserID) => {
     try {
@@ -76,11 +69,10 @@ const Landingpage = () => {
         body: JSON.stringify({ user_id: UserID }),
       });
       const data = await response.json();
-      let userID = localStorage.getItem('userID');
+      let userID = localStorage.getItem("userID");
       try {
-      
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
       setStakeData(data);
       localStorage.setItem("userData", JSON.stringify(data));
@@ -89,13 +81,10 @@ const Landingpage = () => {
       console.error("Error fetching user details:", error);
     }
   };
- 
-
-
 
   const handleSearch = () => {
     fetchData(previewID);
-   // getstekeTokens();
+    // getstekeTokens();
   };
 
   function scrollFunction() {
@@ -111,10 +100,8 @@ const Landingpage = () => {
   }
 
   console.log(userData);
- 
 
-  const wallet_address = useAddress()
-
+  const wallet_address = useAddress();
 
   const { data: parent, isLoading: isParentLoading } = useContractRead(
     contract,
@@ -122,11 +109,10 @@ const Landingpage = () => {
     [wallet_address]
   );
 
-
-const [userID, setUserId] = useState("")
+  const [userID, setUserId] = useState("");
 
   const getDetails = async (wallet_address) => {
-    console.log(wallet_address)
+    console.log(wallet_address);
     try {
       let dumy = await fetch("https://nodes.mjccoin.io/v1/user", {
         method: "POST",
@@ -137,21 +123,20 @@ const [userID, setUserId] = useState("")
       });
       let response = await dumy.json();
       localStorage.setItem("userID", JSON.stringify(response.data.user_id));
-      setUserId(response.data.user_id)
-
+      setUserId(response.data.user_id);
     } catch (error) {
       console.log(error);
     }
   };
-useEffect(()=>{
-  getDetails(wallet_address)
-}, [wallet_address])
+  useEffect(() => {
+    getDetails(wallet_address);
+  }, [wallet_address]);
 
+  const handleSearchDashboard = () => {
+    fetchData(userID);
+  };
 
-const handleSearchDashboard = ()=>{
-  fetchData(userID);
-}
-
+console.log(parent)
 
 
   return (
@@ -179,7 +164,7 @@ const handleSearchDashboard = ()=>{
 
             <div className="connect_btn mobile-connect-button">
               {/* <button> <Link to="/dashboard">Dashboard </Link></button> */}
-                <ConnectWallet/>
+              <ConnectWallet />
             </div>
           </div>
         </div>
@@ -197,17 +182,15 @@ const handleSearchDashboard = ()=>{
               tutorial to learn more
             </p>
             <div className="join_bth">
-            
-            {parent === "0x0000000000000000000000000000000000000000" ? 
-              <button>
-                <a href="/Registration" className="join_btn">
-                 Sign In
-                </a>
-              </button> : 
-              <button onClick={handleSearchDashboard}>
-                  Dashboard
-              </button>
-            }
+              {parent === "0x0000000000000000000000000000000000000000" || parent === undefined ? (
+                <button>
+                  <a href="/Registration" className="join_btn">
+                    Sign In
+                  </a>
+                </button>
+              ) : (
+                <button onClick={handleSearchDashboard}>Dashboard</button>
+              )}
               <button>
                 <a href="/Registration" className="wath_tut">
                   Registration
