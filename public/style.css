@@ -545,7 +545,6 @@ i.fa.fa-user-circle-o {
   font-family: 'Rubik';
   font-weight: bolder;
   font-size: 19px;
-  margin-right: 180px;
   margin-top: 17px;
 }
 
@@ -2109,4 +2108,73 @@ input::-webkit-inner-spin-button {
 
 .join_bth button a {
   color: white !important
+}
+
+
+.modalAfterBuy{
+  position: absolute;
+  top: 50%;
+  z-index: 9999999999;
+  background: white;
+  max-width: 314px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.modal-body.text-center{
+  height: 100px;
+}
+
+
+.modal-button{
+  background-color: #07c5a2 !important;
+}
+
+.popupmainbuy{
+  position: absolute;
+  width: 300px;
+  left: 50%;
+  height: 300px;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  z-index: 99999;
+}
+
+.modal-header{
+  border-bottom: 0 !important;
+  padding-right: 0px !important;
+}
+
+.modal-content{
+  background: linear-gradient(90deg, rgba(7,9,9,1) 36%, rgba(15,48,50,1) 100%);
+  border: 1px solid #00e1b7 !important;
+  border-radius: 10px !important;
+}
+
+.modal-button{
+  background: linear-gradient(180deg, #00e1b7, rgb(62 126 112 / 50%));
+  
+}
+
+.container.opacitylow {
+  opacity: 0.2;
+}
+
+.modal-content{
+  height: 250px;
+  width: 300px;
+}
+
+.modal-content {
+  border: 1px solid #00e1b7 !important;
+  border-radius: 10px !important;
+}
+
+.modal-content-section{
+    color: white;
+    font-size: 17px;
+    margin-top: 54px;
+    padding-left: 15px;
+    padding-right: 15px;
+    line-height: 1.6;
 }

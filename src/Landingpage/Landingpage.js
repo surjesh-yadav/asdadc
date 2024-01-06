@@ -58,15 +58,22 @@ const Landingpage = () => {
   const { contract } = useContract(
     "0x03D95fb8da5e9A147D3bC6dC03C3D75F12Cb11a9"
   );
+  
 
-  const fetchData = async () => {
+ 
+
+
+
+
+
+  const fetchData = async (UserID) => {
     try {
       const response = await fetch("https://nodes.mjccoin.io/v1/alldetails", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ user_id: previewID }),
+        body: JSON.stringify({ user_id: UserID }),
       });
       const data = await response.json();
       let userID = localStorage.getItem('userID');
@@ -77,15 +84,17 @@ const Landingpage = () => {
       }
       setStakeData(data);
       localStorage.setItem("userData", JSON.stringify(data));
-
       navigate("/dashboard");
     } catch (error) {
       console.error("Error fetching user details:", error);
     }
   };
  
+
+
+
   const handleSearch = () => {
-    fetchData();
+    fetchData(previewID);
    // getstekeTokens();
   };
 
@@ -112,6 +121,36 @@ const Landingpage = () => {
     "getParent",
     [wallet_address]
   );
+
+
+const [userID, setUserId] = useState("")
+
+  const getDetails = async (wallet_address) => {
+    console.log(wallet_address)
+    try {
+      let dumy = await fetch("https://nodes.mjccoin.io/v1/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ address: wallet_address.toLowerCase() }),
+      });
+      let response = await dumy.json();
+      localStorage.setItem("userID", JSON.stringify(response.data.user_id));
+      setUserId(response.data.user_id)
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+useEffect(()=>{
+  getDetails(wallet_address)
+}, [wallet_address])
+
+
+const handleSearchDashboard = ()=>{
+  fetchData(userID);
+}
 
 
 
@@ -158,11 +197,17 @@ const Landingpage = () => {
               tutorial to learn more
             </p>
             <div className="join_bth">
+            
+            {parent === "0x0000000000000000000000000000000000000000" ? 
               <button>
-                <a href="/dashboard" className="join_btn">
-                 {parent === "0x0000000000000000000000000000000000000000" ? "Sign In" : "Dashboard"}
+                <a href="/Registration" className="join_btn">
+                 Sign In
                 </a>
+              </button> : 
+              <button onClick={handleSearchDashboard}>
+                  Dashboard
               </button>
+            }
               <button>
                 <a href="/Registration" className="wath_tut">
                   Registration

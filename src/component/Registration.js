@@ -6,6 +6,7 @@ import axios from "axios";
 import React, { useState, useEffect, useRef } from "react";
 import Loading from "./Loading";
 import { useNavigate } from "react-router-dom";
+
 import {
   useTokenBalance,
   useContract,
@@ -26,7 +27,7 @@ const Registration = () => {
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
   };
-  let navigate = useNavigate()
+  let navigate = useNavigate();
   //   const [referralCode, setReferralCode] = useState("");
   const [spending, setSpending] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
@@ -90,8 +91,7 @@ const Registration = () => {
   const [BuyTokenLoading, setBuyTokenLoading] = useState(false);
   const [directStakeJoiningLoading, setDirectStakeJoiningLoading] =
     useState(false);
-    const [StakeLoading, setStakeLoading] =
-    useState(false);
+  const [StakeLoading, setStakeLoading] = useState(false);
   const [SellTokensloading, setSellTokensLoading] = useState(false);
   const [WithdrawTokensloading, setWithdrawTokensLoading] = useState(false);
   const [ApproveTokensloading, setApproveTokensLoading] = useState(false);
@@ -99,7 +99,7 @@ const Registration = () => {
   const [referralCode, setReferralCode] = useState("");
   const [BTCprice, setBTCPrice] = useState("");
   const [BNBprice, setBNBPrice] = useState("");
-  const [mainuser_id , setMainUserId] = useState();
+  const [mainuser_id, setMainUserId] = useState();
   const isValidUSDTamount = Number(USDTAmt) >= 20 || USDTAmt == "";
 
   useEffect(() => {
@@ -142,11 +142,11 @@ const Registration = () => {
 
   var storedData = localStorage.getItem("userID");
   var userDataID = JSON.parse(storedData);
- //console.log(userDataID , " this is  user_id");
+  //console.log(userDataID , " this is  user_id");
   //read functions
   let address = useAddress();
-  
-  const getMainUserId = async (address) =>{
+
+  const getMainUserId = async (address) => {
     try {
       let dumy = await fetch("https://nodes.mjccoin.io/v1/allDetails", {
         method: "POST",
@@ -156,15 +156,15 @@ const Registration = () => {
         body: JSON.stringify({ address: address }),
       });
       let response = await dumy.json();
-      console.log(response.data.user_id , "ythis is my main id")
+      console.log(response.data.user_id, "ythis is my main id");
       setMainUserId(response.data.user_id);
     } catch (error) {
       console.log(error);
     }
-  }
-  useEffect(()=>{
-    getMainUserId(address)
-  },[address])
+  };
+  useEffect(() => {
+    getMainUserId(address);
+  }, [address]);
   const { contract } = useContract(
     "0x03D95fb8da5e9A147D3bC6dC03C3D75F12Cb11a9"
   );
@@ -177,13 +177,13 @@ const Registration = () => {
     USDTContract,
     address
   );
-  
+
   const { data: parent, isLoading: isParentLoading } = useContractRead(
     contract,
     "getParent",
     [address]
   );
-  
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.forEach((value, key) => {
@@ -233,24 +233,23 @@ const Registration = () => {
   // posting id
 
   const postingData = async (previewID) => {
-    console.log(previewID , "this is a preview id")
+    console.log(previewID, "this is a preview id");
     try {
-      const response = await fetch('https://nodes.mjccoin.io/v1/alldetails', {
-        method: 'POST',
+      const response = await fetch("https://nodes.mjccoin.io/v1/alldetails", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ user_id: previewID }),
       });
       const data = await response.json();
-      console.log(data , " this is posting  data");
+      console.log(data, " this is posting  data");
       localStorage.setItem("userData", JSON.stringify(data));
       setUserData(data);
     } catch (error) {
-      console.error('Error fetching user details:', error);
+      console.error("Error fetching user details:", error);
     }
   };
-
 
   // buyTokens
   const { mutateAsync: buyTokens, isLoading: isBuyTokensLoading } =
@@ -260,9 +259,7 @@ const Registration = () => {
     useContractWrite(contract, "DirectStakeJoining");
 
   const { mutateAsync: stakeTokens, isLoading: isStakeLoading } =
-    useContractWrite(contract, "stakeTokens", {gas: 400000 } );
-
-
+    useContractWrite(contract, "stakeTokens", { gas: 400000 });
 
   const DirectStakeJoinings = async () => {
     setDirectStakeJoiningLoading(true);
@@ -296,98 +293,119 @@ const Registration = () => {
     }
   };
 
- const postingSteckTokens = async(user_id , amount)=>{
-      try {
-        let data = await fetch('https://nodes.mjccoin.io/steck/post-token' ,{
-          method: "POST",
-          headers :{
-            "Content-Type": "application/json",
-          },
-          body : JSON.stringify({user_id: user_id , tokensteck_amount: amount})
-        })
-        let response = await data.json() 
-        console.log(response , "this is our response")
-      } catch (error) {
-        console.log(error);
-      }
-     
- }
-
-
- const buyToken = async () => {
-  setBuyTokenLoading(true);
-  try {
-    let ref;
-    if (parent === "0x0000000000000000000000000000000000000000") {
-      ref = referralCode;
-    } else {
-      ref = referralCode;
+  const [userID, setUserId] = useState("");
+  const getDetails = async (address) => {
+    console.log(address);
+    try {
+      let dumy = await fetch("https://nodes.mjccoin.io/v1/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ address: address.toLowerCase() }),
+      });
+      let response = await dumy.json();
+      localStorage.setItem("userID", JSON.stringify(response.data.user_id));
+      setUserId(response.data.user_id);
+    } catch (error) {
+      console.log(error);
     }
-    //console.log(referralCode,"this is parentsss")
+  };
+  useEffect(() => {
+    getDetails(address);
+  }, [address]);
+  console.log(userID);
 
-    let usdtAmt = result2;
-    //   let usdtAmt = ethers.utils.parseEther(result2);
-
-    const data = await buyTokens({
-      args: [ref, usdtAmt.toString(), selectedValue],
-    });
-    console.info("contract call successs", data);
-    await fetch("https://nodes.mjccoin.io/v1/plan-buy", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user_wallet: address,
-        buyed_plan: [{ amount: selectedValue }],
-        parent_wallet_id: ref,
-        user_id: mainuser_id,
-      }),
-    });
-    setBuyTokenLoading(false);
-
-    console.log(mainuser_id , "this is user_id")
-          stakeMjcTokens();
-          // postingData(mainuser_id)
-    
-    toast.success(
-      "Tokens Bought Successfully",
-      {
+  const postingSteckTokens = async (userID, newValue) => {
+    try {
+      let data = await fetch("https://nodes.mjccoin.io/steck/post-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id: userID, tokensteck_amount: newValue }),
+      });
+      let response = await data.json();
+      console.log(response, "this is our response");
+      toast.success("Tokens Staked Successfully", {
         position: toast.POSITION.TOP_CENTER,
-      }
-    );
-    
-  } catch (err) {
-    toast.error("You can not buy more than $1000 in one transaction", {
-      position: toast.POSITION.TOP_CENTER,
-    });
-    console.error("contract call failure", err);
-  } finally {
-    setUSDTAmt("");
-    setBuyTokenLoading(false);
-   
-  }
-};
+      });
+      setIsModalOpen(false);
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  console.log(address);
+
+  const buyToken = async () => {
+    setBuyTokenLoading(true);
+    try {
+      let ref;
+      if (parent === "0x0000000000000000000000000000000000000000") {
+        ref = referralCode;
+      } else {
+        ref = referralCode;
+      }
+      console.log(referralCode, "this is parentsss");
+
+      let usdtAmt = ethers.utils.parseEther(result2);
+
+      const data = await buyTokens({
+        args: [ref, usdtAmt.toString(), selectedValue],
+      });
+
+      // console.info("contract call successs", data);
+      await fetch("https://nodes.mjccoin.io/v1/plan-buy", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_wallet: address,
+          buyed_plan: [{ amount: selectedValue }],
+          parent_wallet_id: ref,
+          user_id: userID,
+        }),
+      });
+      setBuyTokenLoading(false);
+
+      console.log(mainuser_id, "this is user_id");
+      stakeMjcTokens();
+      // postingData(mainuser_id)
+
+      toast.success("Tokens Bought Successfully", {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      setIsModalOpen(true);
+    } catch (err) {
+      toast.error("You can not buy more than $1000 in one transaction", {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      console.error("contract call failure", err);
+    } finally {
+      setUSDTAmt("");
+      setBuyTokenLoading(false);
+    }
+  };
 
   const stakeMjcTokens = async () => {
     setStakeLoading(true);
     try {
-     
-       
-      const data = await stakeTokens({ 
-        args: [100, 365, 0],
+      const data = await stakeTokens({
+        args: [newValue, 365, 0],
       });
+
       setStakeLoading(false);
-      // await postingSteckTokens(mainuser_id , newValue)
-      
-      toast.success("Tokens Staked Successfully", {
-        position: toast.POSITION.TOP_CENTER,
-      });
-      // setTimeout(()=>{
-      //   navigate('/dashboard')
-      // },2000)
+      await postingSteckTokens(mainuser_id, newValue);
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000);
     } catch (err) {
+      setStakeLoading(false);
       toast.error("Something went wrong..Try again", {
         position: toast.POSITION.TOP_CENTER,
       });
@@ -397,6 +415,10 @@ const Registration = () => {
     }
   };
 
+  const stakeMjcTokenHandle = () => {
+    postingSteckTokens(userID, newValue);
+    console.log(userID, newValue);
+  };
 
   const handleUserWallet = async () => {
     try {
@@ -501,14 +523,43 @@ const Registration = () => {
     <div key={index} className="forsage_blue"></div>
   ));
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <div className="regi_main">
+      {isModalOpen && (
+        <div className="popupmainbuy">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3 className="text-center modal-content-section">
+                Stake tokens to activate your current purchase plan
+              </h3>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body text-center">
+              <button
+                onClick={stakeMjcTokenHandle}
+                type="button"
+                class="btn btn-primary center mx-auto modal-button"
+                data-dismiss="modal"
+              >
+                Stake Tokens
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div style={{ zIndex: 99999999 }}>
         <ToastContainer />
       </div>
 
       {/* <img src={blueflase} className="bludeflasereg" alt="blueflase" /> */}
-      <div className="container">
+      <div className={`container ${isModalOpen ? "opacitylow" : ""}`}>
         <div className="main_top_logo">
           <div className="logos_landing">
             <span>
@@ -530,7 +581,7 @@ const Registration = () => {
 
             <div className="connect_btn">
               <button>
-                 <Link to="/">Back </Link>
+                <Link to="/">Back </Link>
               </button>
             </div>
           </div>
@@ -544,7 +595,9 @@ const Registration = () => {
           <div className="row">
             <div className="col-lg-6">
               <div className="regis_left">
-                <h2>Registration On <br></br> MJC Platform</h2>
+                <h2>
+                  Registration On <br></br> MJC Platform
+                </h2>
 
                 <div className="input_upline">
                   <h5>Your Referral Address</h5>
@@ -554,17 +607,22 @@ const Registration = () => {
                     value={referralCode}
                     onChange={handleReferralChange}
                   />
-
                   <div className="wllet_condition">
                     <p>
                       <button onClick={() => handleTabClick("home")}>
                         <span className="check_icon">
                           <i
-                            className={`fa fa-check ${activeTab === "home" ? "activeTabText" : ""}`}
+                            className={`fa fa-check ${
+                              activeTab === "home" ? "activeTabText" : ""
+                            }`}
                             aria-hidden="true"
                           ></i>
                         </span>
-                        <span className={`tabText ${activeTab === "home" ? "activeTabText" : ""}`}>
+                        <span
+                          className={`tabText ${
+                            activeTab === "home" ? "activeTabText" : ""
+                          }`}
+                        >
                           Buy Tokens
                         </span>
                       </button>
@@ -573,13 +631,18 @@ const Registration = () => {
                       <button onClick={() => handleTabClick("menu1")}>
                         <span className="check_icon">
                           <i
-                            className={`fa fa-check ${activeTab === "menu1" ? "activeTabText" : ""
-                              }`}
+                            className={`fa fa-check ${
+                              activeTab === "menu1" ? "activeTabText" : ""
+                            }`}
                             aria-hidden="true"
                           ></i>
                         </span>
-                        <span className={`tabText ${activeTab === "menu1" ? "activeTabText" : ""}`}>
-                        Direct Staking
+                        <span
+                          className={`tabText ${
+                            activeTab === "menu1" ? "activeTabText" : ""
+                          }`}
+                        >
+                          Direct Staking
                         </span>
                       </button>
                     </p>
@@ -587,13 +650,18 @@ const Registration = () => {
                       <button onClick={() => handleTabClick("menu2")}>
                         <span className="check_icon">
                           <i
-                            className={`fa fa-check ${activeTab === "menu2" ? "activeTabText" : ""
-                              }`}
+                            className={`fa fa-check ${
+                              activeTab === "menu2" ? "activeTabText" : ""
+                            }`}
                             aria-hidden="true"
                           ></i>
                         </span>
-                        <span className={`tabText ${activeTab === "menu2" ? "activeTabText" : ""}`}>
-                        MJC Stake Joining
+                        <span
+                          className={`tabText ${
+                            activeTab === "menu2" ? "activeTabText" : ""
+                          }`}
+                        >
+                          MJC Stake Joining
                         </span>
                       </button>
                     </p>
@@ -633,8 +701,9 @@ const Registration = () => {
                   <div className="tab-content">
                     <div
                       id="home"
-                      className={`container tab-pane ${activeTab === "home" ? "active" : "fade"
-                        }`}
+                      className={`container tab-pane ${
+                        activeTab === "home" ? "active" : "fade"
+                      }`}
                     >
                       <div className="buy_token_card">
                         <h1>Buy MJC Tokens</h1>
@@ -683,8 +752,9 @@ const Registration = () => {
                     </div>
                     <div
                       id="menu1"
-                      className={`container tab-pane ${activeTab === "menu1" ? "active" : "fade"
-                        }`}
+                      className={`container tab-pane ${
+                        activeTab === "menu1" ? "active" : "fade"
+                      }`}
                     >
                       <div className="buy_token_card">
                         <h1>Direct Staking</h1>
@@ -721,8 +791,9 @@ const Registration = () => {
                     </div>
                     <div
                       id="menu2"
-                      className={`container tab-pane ${activeTab === "menu2" ? "active" : "fade"
-                        }`}
+                      className={`container tab-pane ${
+                        activeTab === "menu2" ? "active" : "fade"
+                      }`}
                     >
                       <div className="buy_token_card">
                         <h1>MJC Stake Joining</h1>
@@ -762,23 +833,7 @@ const Registration = () => {
                       </div>
                     </div>
                   </div>
-                  {/* <h2> <span className='info_circle_icon'><i className="fa fa-info-circle" aria-hidden="true"></i></span>Information</h2>
-                                    <p>Insufficient balance for registration.
-                                        Registration requires 10.9 BUSD and at least 0.005 BNB.  Your wallet balance: 0.00 BUSD and 0.000 BNB.</p>
-
-                                    <button className='read_guid_reg'>Read guide</button>
-
-                                    <div className='video_playe_you'>
-                                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/tgbNymZ7vqY">
-                                        </iframe>
-                                    </div>
-
-                                    <div className='need_help'>
-                                        <h5>
-                                            <span className='message_icon'><i className="fa fa-commenting-o" aria-hidden="true"></i></span>
-                                            Need help with registration? <br></br>
-                                           <span className='message2'>Talk to experts in the support chat</span> </h5>
-                                    </div> */}
+                  
                 </div>
               </div>
             </div>

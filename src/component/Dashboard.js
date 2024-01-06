@@ -106,34 +106,18 @@ const Dashboard = () => {
       const data = await response.json();
       localStorage.setItem("userData", JSON.stringify(data));
       setUserData(data);
-
-
-      // const getstekeTokens = async () =>{
-      let userID = localStorage.getItem('userID');
-      try {
-        let data = await fetch(`https://nodes.mjccoin.io/steck/get-token?user_id=${previewID}`)
-        let response = await data.json()
-        console.log(previewID, "ussssddddd")
-        setStakeWallet(response.data.total)
-
-        //console.log()
-      } catch (error) {
-        console.log(error)
-      }
-
-
     } catch (error) {
       console.error("Error fetching user details:", error);
     }
   };
 
+
+
   const handleSearch = () => {
     fetchData()
     //getstekeTokens()
-    toggleDropdown2()
+    
   };
-
-
 
   const wallet_address = userData?.data?.wallet_address;
 
@@ -673,7 +657,7 @@ const Dashboard = () => {
   const getstekeTokens = async () => {
     let userID = localStorage.getItem('userID');
     try {
-      let data = await fetch(`https://nodes.mjccoin.io/steck/get-token?user_id=${previewID}`)
+      let data = await fetch(`https://nodes.mjccoin.io/steck/get-token?user_id=${userID}`)
       let response = await data.json()
       //console.log (previewID,"ussssddddd")
       setStakeWallet(response.data.total)
@@ -705,16 +689,7 @@ const Dashboard = () => {
 
   getBnbBalance()
 
-   const toggleDropdown2 = () => {
-        const menuDropdown = document.querySelector('.sid_menus_all');
-        menuDropdown.style.display = menuDropdown.style.display === 'none' ? 'block' : 'none';
-
-
-        const menuDropdown2 = document.querySelector('.pre_Id');
-        menuDropdown2.style.display = menuDropdown2.style.display === 'none' ? 'block' : 'none';
-
-    };
-
+   
 
   return (
     <React.Fragment>
